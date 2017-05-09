@@ -52,12 +52,10 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
       this.props.navigation.state.index !== nextProps.navigation.state.index
     ) {
       const { routes, index } = nextProps.navigation.state;
-      if (index < routes.length) {
-	      if (routes[index].routeName === 'DrawerOpen') {
-		      this._drawer.openDrawer();
-	      } else {
-		      this._drawer.closeDrawer();
-	      }
+      if (index < routes.length && routes[index].routeName === 'DrawerOpen') {
+          this._drawer.openDrawer();
+      } else {
+          this._drawer.closeDrawer();
       }
     }
     this._updateScreenNavigation(nextProps.navigation);
@@ -68,21 +66,17 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
   _handleDrawerOpen = () => {
     const { navigation } = this.props;
     const { routes, index } = navigation.state;
-	  if (index < routes.length) {
-		  if (routes[index].routeName !== 'DrawerOpen') {
-			  this.props.navigation.navigate('DrawerOpen');
-		  }
-	  }
+      if (index < routes.length && routes[index].routeName !== 'DrawerOpen') {
+          this.props.navigation.navigate('DrawerOpen');
+      }
   };
 
   _handleDrawerClose = () => {
     const { navigation } = this.props;
     const { routes, index } = navigation.state;
-	  if (index < routes.length) {
-		  if (routes[index].routeName !== 'DrawerClose') {
-			  this.props.navigation.navigate('DrawerClose');
-		  }
-	  }
+      if (index < routes.length && routes[index].routeName !== 'DrawerClose') {
+          this.props.navigation.navigate('DrawerClose');
+      }
   };
 
   _updateScreenNavigation = (
