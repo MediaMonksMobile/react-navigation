@@ -245,27 +245,37 @@ export default (
       if (action.type === NavigationActions.RESET) {
         const resetAction: NavigationResetAction = action;
 
+        let resetRoutes = [];
+
+        resetAction.actions.forEach(
+	        (childAction: NavigationNavigateAction, index: number) => {
+		        const router = childRouters[childAction.routeName];
+		        if (router) {
+			        resetRoutes.push({
+				        ...childAction,
+				        ...router.getStateForAction(childAction),
+				        routeName: childAction.routeName,
+				        key: `Init${index}`,
+			        });
+		        } else if (routeNames.indexOf(childAction.routeName) > -1) {
+			        const route = {
+				        ...childAction,
+				        key: `Init${index}`,
+			        };
+			        delete route.type;
+			        resetRoutes.push(route);
+		        }
+	        },
+        );
+
+        if (resetRoutes.length == 0)
+        {
+          resetRoutes = state.routes;
+        }
+
         return {
           ...state,
-          routes: resetAction.actions.map(
-            (childAction: NavigationNavigateAction, index: number) => {
-              const router = childRouters[childAction.routeName];
-              if (router) {
-                return {
-                  ...childAction,
-                  ...router.getStateForAction(childAction),
-                  routeName: childAction.routeName,
-                  key: `Init${index}`,
-                };
-              }
-              const route = {
-                ...childAction,
-                key: `Init${index}`,
-              };
-              delete route.type;
-              return route;
-            },
-          ),
+          routes: resetRoutes,
           index: action.index,
         };
       }
