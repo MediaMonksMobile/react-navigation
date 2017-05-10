@@ -32,6 +32,7 @@ const DefaultDrawerConfig = {
     (Platform.OS === 'android' ? 56 : 64),
   contentComponent: DrawerItems,
   drawerPosition: 'left',
+  drawerLockMode: 'unlocked',
 };
 
 const DrawerNavigator = (
@@ -42,6 +43,7 @@ const DrawerNavigator = (
   const {
     containerConfig,
     drawerWidth,
+    drawerLockMode,
     contentComponent,
     contentOptions,
     drawerPosition,
@@ -78,6 +80,7 @@ const DrawerNavigator = (
     <DrawerView
       {...props}
       drawerWidth={drawerWidth}
+      drawerLockMode={drawerLockMode}
       contentComponent={contentComponent}
       contentOptions={contentOptions}
       drawerPosition={drawerPosition}
