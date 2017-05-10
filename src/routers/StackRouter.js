@@ -270,7 +270,7 @@ export default (
 
         if (resetRoutes.length == 0)
         {
-          resetRoutes = state.routes;
+          resetRoutes = state.routes.splice(0, 1);
         }
 
         return {
