@@ -15,6 +15,7 @@ import type { DrawerScene } from './DrawerView.js';
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  drawerItemOptions: scene => {},
   activeTintColor?: string,
   activeBackgroundColor?: string,
   inactiveTintColor?: string,
@@ -31,6 +32,7 @@ type Props = {
 const DrawerNavigatorItems = (
   {
     navigation,
+    drawerItemOptions,
     activeTintColor,
     activeBackgroundColor,
     inactiveTintColor,
@@ -44,13 +46,24 @@ const DrawerNavigatorItems = (
   <View style={[styles.container, style]}>
     {navigation.state.routes.map((route: *, index: number) => {
       const focused = navigation.state.index === index;
+      const scene = { route, index, focused, tintColor: null };
+
+      if (drawerItemOptions) {
+        const itemOptions = drawerItemOptions(scene);
+        activeTintColor = itemOptions.activeTintColor || activeTintColor;
+        inactiveTintColor = itemOptions.inactiveTintColor || inactiveTintColor;
+        activeBackgroundColor = itemOptions.activeBackgroundColor || activeBackgroundColor;
+        inactiveBackgroundColor = itemOptions.inactiveBackgroundColor || inactiveBackgroundColor;
+        style = itemOptions.style || style;
+        labelStyle = itemOptions.labelStyle || labelStyle;
+      }
+
       const color = focused ? activeTintColor : inactiveTintColor;
-      const backgroundColor = focused
-        ? activeBackgroundColor
-        : inactiveBackgroundColor;
-      const scene = { route, index, focused, tintColor: color };
+      scene.tintColor = color;
+      const backgroundColor = focused ? activeBackgroundColor : inactiveBackgroundColor;
       const icon = renderIcon(scene);
       const label = getLabel(scene);
+
       return (
         <TouchableItem
           key={route.key}
